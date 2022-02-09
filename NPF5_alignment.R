@@ -38,7 +38,7 @@ aligned2 <- AlignSeqs(seq2)
 
 #view alignment
 BrowseSeqs(aligned, highlight = 3)
-BrowseSeqs(aligned2, highlight = 1)
+BrowseSeqs(aligned2, highlight = 3)
 
 #write alignment to new FASTA file
 writeXStringSet(aligned, file='NPF5_alignment1')
