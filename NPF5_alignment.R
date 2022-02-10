@@ -2,7 +2,8 @@
 #NPF5 alignment 
 #02_08_22
 
-#Sequences retrieved from https://medicago.toulouse.inra.fr/MtrunA17r5.0-ANR/jbrowse/current/?data=..%2Fdata%2FMtrunA17r5.0-ANR&loc=MtrunA17Chr7%3A46133801..46136188&highlight=&tracks=DNA%2Cannotation%2F1_8
+#Sequences retrieved from:https://medicago.toulouse.inra.fr/MtrunA17r5.0-ANR/jbrowse/current/?data=..%2Fdata%2FMtrunA17r5.0-ANR&loc=MtrunA17Chr7%3A46133801..46136188&highlight=&tracks=DNA%2Cannotation%2F1_8
+#Training set retrieved from: http://www2.decipher.codes/Downloads.html
 
 library(DECIPHER)
 
@@ -32,6 +33,25 @@ fas11C <- 'NPF5.11cDNA.fasta'
 seq <- readDNAStringSet(c(fas3, fas4, fas5, fas6, fas7, fas8, fas9, fas10, fas11))
 seq2 <- readDNAStringSet(c(fas3C, fas4C, fas5C, fas6C, fas7C, fas8C, fas9C, fas10C, fas11C))
 
+##This section is for creating a phylogenetic analysis of genes
+#remove gaps from sequences
+seq3 <- RemoveGaps(seq)
+seq4 <- RemoveGaps(seq2)
+
+#load training set
+load('Contax_v1_March2018.RData')
+load('GTDB_r202-mod_April2021.RData')
+
+#calssify sequences
+ids <- IdTaxa(seq3,
+              trainingSet,
+              strand = 'both',
+              threshold = 60,
+              processors = 4)
+#show id results
+print(ids)
+
+##This section is for gene alignment
 #align senescence
 aligned <- AlignSeqs(seq)
 aligned2 <- AlignSeqs(seq2)
@@ -41,4 +61,5 @@ BrowseSeqs(aligned, highlight = 3)
 BrowseSeqs(aligned2, highlight = 3)
 
 #write alignment to new FASTA file
-writeXStringSet(aligned, file='NPF5_alignment1')
+writeXStringSet(aligned, file='NPF5_alignment1.fasta')
+writeXStringSet(aligned2, file='NPF5CDS_alignment1.fasta')
